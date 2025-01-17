@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coder Facts</title>
+    <title>Coder Facts Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,133 +25,109 @@
             background-color: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             border-radius: 10px;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
             color: #ecf0f1;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            background-color: rgba(255, 255, 255, 0.2);
-            margin: 10px 0;
-            padding: 10px;
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
             border-radius: 5px;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        li:hover {
-            background-color: rgba(255, 255, 255, 0.4);
+        button:hover {
+            background-color: #2980b9;
         }
 
-        @media (max-width: 600px) {
-            #app {
-                width: 90%;
-            }
+        #fact {
+            margin-top: 20px;
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <h1>Facts About Coders</h1>
-        <ul id="facts-list"></ul>
+        <h1>Coder Facts Quiz</h1>
+        <div id="question-container">
+            <p id="question"></p>
+            <button id="option1"></button>
+            <button id="option2"></button>
+            <button id="option3"></button>
+        </div>
+        <div id="fact"></div>
     </div>
     <script>
         const facts = [
+            "Coders are often excellent problem solvers, as they need to break down complex problems into manageable tasks.",
+            "Coders use various programming languages like Python, Java, C++, JavaScript, and more, each suited for different tasks.",
+            "A significant part of coding involves debugging, which is the process of finding and fixing errors in code.",
+            "Coders frequently use version control systems like Git to manage changes to their codebase.",
+            "Many coding projects require collaboration, often facilitated through platforms like GitHub or Bitbucket."
+        ];
+
+        const questions = [
             {
-                fact: "Problem Solvers",
-                description: "Coders are often excellent problem solvers, as they need to break down complex problems into manageable tasks."
+                question: "Which language is primarily used for web development?",
+                options: ["Python", "JavaScript", "C++"],
+                answer: "JavaScript"
             },
             {
-                fact: "Languages",
-                description: "Coders use various programming languages like Python, Java, C++, JavaScript, and more, each suited for different tasks."
+                question: "What is Git used for?",
+                options: ["Version Control", "Designing", "Testing"],
+                answer: "Version Control"
             },
             {
-                fact: "Debugging",
-                description: "A significant part of coding involves debugging, which is the process of finding and fixing errors in code."
-            },
-            {
-                fact: "Version Control",
-                description: "Coders frequently use version control systems like Git to manage changes to their codebase."
-            },
-            {
-                fact: "Collaboration",
-                description: "Many coding projects require collaboration, often facilitated through platforms like GitHub or Bitbucket."
-            },
-            {
-                fact: "Continuous Learning",
-                description: "The tech field evolves rapidly, so coders must continuously learn new languages, tools, and technologies."
-            },
-            {
-                fact: "Specializations",
-                description: "Coders can specialize in areas such as web development, mobile app development, data science, or game development."
-            },
-            {
-                fact: "Algorithms",
-                description: "Understanding algorithms is crucial for coders, as they provide a step-by-step procedure for solving problems."
-            },
-            {
-                fact: "Data Structures",
-                description: "Coders must be familiar with data structures like arrays, linked lists, and trees to efficiently store and manage data."
-            },
-            {
-                fact: "Logic and Creativity",
-                description: "Coding requires both logical thinking and creativity to design efficient and innovative solutions."
-            },
-            {
-                fact: "Frameworks and Libraries",
-                description: "Coders often use frameworks and libraries to speed up development and avoid reinventing the wheel."
-            },
-            {
-                fact: "Testing",
-                description: "Writing tests is an essential part of coding to ensure that software behaves as expected."
-            },
-            {
-                fact: "Code Reviews",
-                description: "Coders participate in code reviews to improve code quality and share knowledge among team members."
-            },
-            {
-                fact: "Documentation",
-                description: "Good coders write documentation to help others understand and use their code effectively."
-            },
-            {
-                fact: "Agile Methodologies",
-                description: "Many coders work within agile frameworks, which promote iterative development and flexibility."
-            },
-            {
-                fact: "Open Source",
-                description: "Coders often contribute to open-source projects, which are publicly accessible and collaborative."
-            },
-            {
-                fact: "Hackathons",
-                description: "Coders participate in hackathons, which are events where they collaborate intensively on software projects."
-            },
-            {
-                fact: "Community Involvement",
-                description: "Coders engage with communities through forums, meetups, and conferences to share knowledge and network."
-            },
-            {
-                fact: "Remote Work",
-                description: "Coding is a profession that often allows for remote work, providing flexibility in work location."
-            },
-            {
-                fact: "Impact",
-                description: "Coders have a significant impact on the world, as software is integral to nearly every industry and aspect of modern life."
+                question: "Which of these is a popular code hosting platform?",
+                options: ["GitHub", "Photoshop", "Excel"],
+                answer: "GitHub"
             }
         ];
 
-        const factsList = document.getElementById('facts-list');
+        let currentQuestionIndex = 0;
 
-        facts.forEach(fact => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<strong>${fact.fact}:</strong> ${fact.description}`;
-            factsList.appendChild(listItem);
-        });
+        function loadQuestion() {
+            const questionElement = document.getElementById('question');
+            const option1 = document.getElementById('option1');
+            const option2 = document.getElementById('option2');
+            const option3 = document.getElementById('option3');
+
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            option1.textContent = currentQuestion.options[0];
+            option2.textContent = currentQuestion.options[1];
+            option3.textContent = currentQuestion.options[2];
+
+            option1.onclick = () => checkAnswer(currentQuestion.options[0]);
+            option2.onclick = () => checkAnswer(currentQuestion.options[1]);
+            option3.onclick = () => checkAnswer(currentQuestion.options[2]);
+        }
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selectedOption === currentQuestion.answer) {
+                showFact();
+                currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+                loadQuestion();
+            } else {
+                alert("Try again!");
+            }
+        }
+
+        function showFact() {
+            const factElement = document.getElementById('fact');
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            factElement.textContent = randomFact;
+        }
+
+        loadQuestion();
     </script>
 </body>
 </html>
